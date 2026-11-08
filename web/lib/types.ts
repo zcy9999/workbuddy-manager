@@ -711,6 +711,8 @@ export interface UsagePoint {
    * 可选：老版本后端不返回该字段，界面按 0 处理（不显示失败）。
    */
   failed?: number;
+  /** 当日成功请求数（2xx，issue #369 第 3 点）；同样来自 request_logs。 */
+  success?: number;
 }
 
 /**
@@ -731,6 +733,8 @@ export interface UsageHourPoint {
   credit: number;
   /** 该小时的失败请求数（来自请求日志，与 `UsagePoint.failed` 同一口径） */
   failed: number;
+  /** 该小时的成功请求数（2xx） */
+  success?: number;
 }
 
 /** 一天的积分收入 / 支出（`/api/stats/credits` 的 daily 项） */
@@ -777,6 +781,44 @@ export interface CreditsFlow {
   granularity?: 'day' | 'hour';
   /** 24 个小时桶；仅 granularity === 'hour' 时存在。 */
   hourly?: CreditsFlowHourPoint[];
+}
+
+export interface AccountUsageRow {
+  day: string;
+  account: string;
+  nickname: string;
+  uid8: string;
+  requests: number;
+  tokens: number;
+  credit: number;
+  cost: number | null;
+}
+
+export interface AccountModelUsageRow {
+  account: string;
+  nickname: string;
+  uid8: string;
+  model: string;
+  requests: number;
+  tokens: number;
+  credit: number;
+  cost: number | null;
+}
+
+export interface AccountModelUsageResponse {
+  items: AccountModelUsageRow[];
+  total: number;
+  truncated: boolean;
+  from: string;
+  to: string;
+}
+
+export interface AccountUsageResponse {
+  items: AccountUsageRow[];
+  total: number;
+  truncated: boolean;
+  from: string;
+  to: string;
 }
 
 export interface UsageBreakdown {
